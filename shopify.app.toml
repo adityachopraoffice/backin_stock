@@ -3,14 +3,18 @@
 name = "Backin Stock"
 embedded = true
 client_id = "47cb9e9519a25773a829b4d49a7df9c0"
-application_url = "https://shopify.dev/apps/default-app-home"
+application_url = "https://backin-stock.vercel.app"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = ""
+scopes = "read_products,read_inventory"
 
 [auth]
-redirect_urls = [ "https://shopify.dev/apps/default-app-home/api/auth" ]
+redirect_urls = [
+  "https://backin-stock.vercel.app/auth/callback",
+  "https://backin-stock.vercel.app/auth/shopify/callback",
+  "https://backin-stock.vercel.app/api/auth/callback"
+]
 
 [webhooks]
 api_version = "2026-10"
@@ -19,5 +23,4 @@ api_version = "2026-10"
 handle = "backinstock-extension"
 
 [build]
-include_config_on_deploy = true
 automatically_update_urls_on_dev = true
