@@ -1,0 +1,23 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "Backin Stock"
+embedded = true
+client_id = "47cb9e9519a25773a829b4d49a7df9c0"
+application_url = "https://shopify.dev/apps/default-app-home"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = ""
+
+[auth]
+redirect_urls = [ "https://shopify.dev/apps/default-app-home/api/auth" ]
+
+[webhooks]
+api_version = "2026-10"
+
+[extensions.theme]
+handle = "backinstock-extension"
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true

@@ -1,0 +1,18 @@
+<div id="backinstock-wrapper"
+  data-shop="{{ shop.permanent_domain }}"
+  data-product-title="{{ product.title }}"
+  data-product-handle="{{ product.handle }}"
+  data-available="{{ product.available }}">
+</div>
+{{ 'back-in-stock.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+  "name": "Back In Stock",
+  "target": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": []
+}
+{% endschema %}

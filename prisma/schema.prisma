@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id                  String    @id
+  shop                String
+  state               String
+  isOnline            Boolean   @default(false)
+  scope               String?
+  expires             DateTime?
+  accessToken         String
+  userId              BigInt?
+  firstName           String?
+  lastName            String?
+  email               String?
+  accountOwner        Boolean   @default(false)
+  locale              String?
+  collaborator        Boolean?  @default(false)
+  emailVerified       Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+}
+
+model ShopSettings {
+  id               Int    @id @default(autoincrement())
+  shop             String @unique
+  selectedTemplate String @default("minimal")
+  formTitle        String @default("Notify me when back in stock")
+  buttonText       String @default("Notify Me")
+  successMessage   String @default("You'll be notified when this is back!")
+  currentPlan      String @default("free")
+}
+
+model Subscriber {
+  id             Int      @id @default(autoincrement())
+  shop           String
+  email          String
+  productTitle   String
+  productHandle  String
+  createdAt      DateTime @default(now())
+}
