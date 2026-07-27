@@ -52,14 +52,14 @@ export async function action({ request }) {
   const { billing, session } = await authenticate.admin(request);
   const formData = await request.formData();
   const plan = formData.get("plan");
-  
-  const appUrl = process.env.SHOPIFY_APP_URL || process.env.HOST || new URL(request.url).origin;
 
   if (plan === "basic" || plan === "pro") {
+    const shopName = session.shop.split(".")[0];
+    const apiKey = process.env.SHOPIFY_API_KEY;
     await billing.request({
       plan: plan,
       isTest: true,
-      returnUrl: `${appUrl}/app/billing?shop=${session.shop}`,
+      returnUrl: `https://admin.shopify.com/store/${shopName}/apps/${apiKey}/app/billing`,
     });
   }
 
