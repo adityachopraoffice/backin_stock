@@ -49,7 +49,7 @@ export async function loader({ request }) {
 }
 
 export async function action({ request }) {
-  const { billing } = await authenticate.admin(request);
+  const { billing, session } = await authenticate.admin(request);
   const formData = await request.formData();
   const plan = formData.get("plan");
   
@@ -59,7 +59,7 @@ export async function action({ request }) {
     await billing.request({
       plan: plan,
       isTest: true,
-      returnUrl: `${appUrl}/app/billing`,
+      returnUrl: `${appUrl}/app/billing?shop=${session.shop}`,
     });
   }
 
