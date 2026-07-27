@@ -61,6 +61,21 @@ export async function action({ request }) {
       isTest: true,
       returnUrl: `https://admin.shopify.com/store/${shopName}/apps/${apiKey}/app/billing`,
     });
+  } else if (plan === "free") {
+    const { appSubscriptions } = await billing.check({
+      plans: ["basic", "pro"],
+      isTest: true,
+    });
+    
+    for (const sub of appSubscriptions) {
+      if (sub.id) {
+        await billing.cancel({
+          subscriptionId: sub.id,
+          isTest: true,
+          prorate: true,
+        });
+      }
+    }
   }
 
   return json({ success: true });
@@ -95,7 +110,10 @@ export default function Billing() {
                     <li>1 template (Minimal)</li>
                     <li>No CSV export</li>
                   </ul>
-                  <Button disabled={currentPlan === "free"}>
+                  <Button 
+                    disabled={currentPlan === "free"}
+                    onClick={() => handleUpgrade("free")}
+                  >
                     {currentPlan === "free" ? "Current Plan" : "Downgrade to Free"}
                   </Button>
                 </BlockStack>
