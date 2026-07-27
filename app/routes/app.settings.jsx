@@ -62,6 +62,64 @@ export async function action({ request }) {
   return json({ success: true });
 }
 
+function PreviewWidget({ title, buttonText, template }) {
+  let containerStyle = {
+    padding: "24px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+    fontFamily: "sans-serif",
+    transition: "all 0.3s ease",
+  };
+
+  let inputStyle = {
+    padding: "10px",
+    width: "100%",
+    boxSizing: "border-box",
+  };
+
+  let btnStyle = {
+    padding: "12px 16px",
+    cursor: "pointer",
+    width: "100%",
+  };
+
+  let titleStyle = {
+    margin: "0 0 8px 0",
+    fontSize: "18px",
+    fontWeight: "600",
+  };
+
+  if (template === "minimal") {
+    containerStyle = { ...containerStyle, border: "1px solid #e1e3e5", borderRadius: "4px", backgroundColor: "#fff" };
+    inputStyle = { ...inputStyle, border: "1px solid #c9cccf", borderRadius: "4px" };
+    btnStyle = { ...btnStyle, border: "none", backgroundColor: "#202223", color: "#fff", borderRadius: "4px" };
+  } else if (template === "bold") {
+    containerStyle = { ...containerStyle, border: "4px solid #000", backgroundColor: "#fff" };
+    inputStyle = { ...inputStyle, border: "2px solid #000", fontWeight: "bold", fontSize: "16px" };
+    btnStyle = { ...btnStyle, border: "2px solid #000", backgroundColor: "#000", color: "#fff", fontWeight: "bold", textTransform: "uppercase", fontSize: "16px" };
+    titleStyle = { ...titleStyle, textTransform: "uppercase", fontWeight: "900" };
+  } else if (template === "elegant") {
+    containerStyle = { ...containerStyle, borderRadius: "12px", backgroundColor: "#fdfbf7", boxShadow: "0 10px 30px rgba(0,0,0,0.08)" };
+    inputStyle = { ...inputStyle, border: "1px solid #e0dcd3", borderRadius: "24px", backgroundColor: "#fff", padding: "12px 16px" };
+    btnStyle = { ...btnStyle, border: "none", backgroundColor: "#6b5b52", color: "#fff", borderRadius: "24px", fontSize: "16px" };
+    titleStyle = { ...titleStyle, fontFamily: "serif", fontStyle: "italic", color: "#4a3f39", fontSize: "20px", textAlign: "center" };
+  } else if (template === "dark") {
+    containerStyle = { ...containerStyle, border: "1px solid #444", borderRadius: "8px", backgroundColor: "#111213", color: "#fff" };
+    inputStyle = { ...inputStyle, border: "1px solid #555", borderRadius: "4px", backgroundColor: "#202123", color: "#fff" };
+    btnStyle = { ...btnStyle, border: "none", backgroundColor: "#fff", color: "#111213", borderRadius: "4px", fontWeight: "bold" };
+    titleStyle = { ...titleStyle, color: "#fff" };
+  }
+
+  return (
+    <div style={containerStyle}>
+      <h4 style={titleStyle}>{title || "Notify me when back in stock"}</h4>
+      <input style={inputStyle} type="email" placeholder="Email address" disabled />
+      <button style={btnStyle} disabled>{buttonText || "Notify Me"}</button>
+    </div>
+  );
+}
+
 export default function Settings() {
   const { settings } = useLoaderData();
   const actionData = useActionData();
@@ -136,7 +194,7 @@ export default function Settings() {
                 <Text variant="headingMd" as="h2">
                   Template
                 </Text>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" }}>
                   {templates.map((tpl) => (
                     <div
                       key={tpl.id}
@@ -174,6 +232,19 @@ export default function Settings() {
             <Button primary loading={isSaving} onClick={handleSave}>
               Save Settings
             </Button>
+          </BlockStack>
+        </Layout.Section>
+
+        <Layout.Section variant="oneThird">
+          <BlockStack gap="400">
+            <Text variant="headingMd" as="h2">Live Preview</Text>
+            <Card background="bg-surface-secondary">
+              <PreviewWidget 
+                title={formState.formTitle} 
+                buttonText={formState.buttonText} 
+                template={formState.selectedTemplate} 
+              />
+            </Card>
           </BlockStack>
         </Layout.Section>
       </Layout>
