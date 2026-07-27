@@ -1,177 +1,117 @@
 import { json } from "@remix-run/node";
-import {
-  useLoaderData,
-  useSubmit,
-  useActionData,
-  useNavigation,
-} from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import {
   Page,
   Layout,
   Card,
   BlockStack,
-  TextField,
-  Button,
-  InlineGrid,
   Text,
-  Badge,
+  InlineGrid,
+  Button,
+  DataTable,
+  EmptyState,
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import prisma from "../db.server";
-import { useEffect, useState } from "react";
 import { TitleBar } from "@shopify/app-bridge-react";
 
 export async function loader({ request }) {
   const { session } = await authenticate.admin(request);
 
-  let settings = await prisma.shopSettings.findUnique({
-    where: { shop: session.shop },
+  const [totalSubscribers, recentSubscribers, settings] = await Promise.all([
+    prisma.subscriber.count({ where: { shop: session.shop } }),
+    prisma.subscriber.findMany({
+      where: { shop: session.shop },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }),
+    prisma.shopSettings.findUnique({
+      where: { shop: session.shop },
+    }),
+  ]);
+
+  return json({
+    totalSubscribers,
+    recentSubscribers,
+    settings: settings || { currentPlan: "free", selectedTemplate: "minimal" },
   });
-
-  if (!settings) {
-    settings = await prisma.shopSettings.create({
-      data: {
-        shop: session.shop,
-      },
-    });
-  }
-
-  return json({ settings });
 }
 
-export async function action({ request }) {
-  const { session } = await authenticate.admin(request);
-  const formData = await request.formData();
+export default function Dashboard() {
+  const { totalSubscribers, recentSubscribers, settings } = useLoaderData();
+  const navigate = useNavigate();
 
-  const formTitle = formData.get("formTitle");
-  const buttonText = formData.get("buttonText");
-  const successMessage = formData.get("successMessage");
-  const selectedTemplate = formData.get("selectedTemplate");
-
-  await prisma.shopSettings.update({
-    where: { shop: session.shop },
-    data: {
-      formTitle: String(formTitle),
-      buttonText: String(buttonText),
-      successMessage: String(successMessage),
-      selectedTemplate: String(selectedTemplate),
-    },
-  });
-
-  return json({ success: true });
-}
-
-export default function Settings() {
-  const { settings } = useLoaderData();
-  const actionData = useActionData();
-  const submit = useSubmit();
-  const nav = useNavigation();
-
-  const isSaving = nav.state === "submitting";
-
-  const [formState, setFormState] = useState({
-    formTitle: settings.formTitle,
-    buttonText: settings.buttonText,
-    successMessage: settings.successMessage,
-    selectedTemplate: settings.selectedTemplate,
-  });
-
-  useEffect(() => {
-    if (actionData?.success) {
-      shopify.toast.show("Settings saved");
-    }
-  }, [actionData]);
-
-  const handleChange = (value, id) => {
-    setFormState((prev) => ({ ...prev, [id]: value }));
-  };
-
-  const templates = [
-    { id: "minimal", name: "Minimal", requiresUpgrade: false },
-    { id: "bold", name: "Bold", requiresUpgrade: settings.currentPlan === "free" },
-    { id: "elegant", name: "Elegant", requiresUpgrade: settings.currentPlan === "free" },
-    { id: "dark", name: "Dark", requiresUpgrade: settings.currentPlan === "free" },
-  ];
-
-  const handleSave = () => {
-    submit(formState, { method: "post" });
-  };
+  const subscriberRows = recentSubscribers.map((sub) => [
+    sub.email,
+    sub.productTitle,
+    new Date(sub.createdAt).toLocaleDateString(),
+  ]);
 
   return (
     <Page>
-      <TitleBar title="BackInStock Settings" />
+      <TitleBar title="Dashboard" />
       <Layout>
         <Layout.Section>
           <BlockStack gap="500">
-            <Card>
-              <BlockStack gap="400">
-                <Text variant="headingMd" as="h2">
-                  Form Details
-                </Text>
-                <TextField
-                  label="Form Title"
-                  value={formState.formTitle}
-                  onChange={(v) => handleChange(v, "formTitle")}
-                  autoComplete="off"
-                />
-                <TextField
-                  label="Button Text"
-                  value={formState.buttonText}
-                  onChange={(v) => handleChange(v, "buttonText")}
-                  autoComplete="off"
-                />
-                <TextField
-                  label="Success Message"
-                  value={formState.successMessage}
-                  onChange={(v) => handleChange(v, "successMessage")}
-                  autoComplete="off"
-                />
-              </BlockStack>
-            </Card>
+            <InlineGrid columns={{ xs: 1, md: 3 }} gap="400">
+              <Card>
+                <BlockStack gap="200">
+                  <Text as="h3" variant="headingSm" color="subdued">
+                    Total Subscribers
+                  </Text>
+                  <Text as="p" variant="headingLg">
+                    {totalSubscribers}
+                  </Text>
+                </BlockStack>
+              </Card>
+              <Card>
+                <BlockStack gap="200">
+                  <Text as="h3" variant="headingSm" color="subdued">
+                    Current Plan
+                  </Text>
+                  <Text as="p" variant="headingLg">
+                    {settings.currentPlan.charAt(0).toUpperCase() + settings.currentPlan.slice(1)}
+                  </Text>
+                </BlockStack>
+              </Card>
+              <Card>
+                <BlockStack gap="200">
+                  <Text as="h3" variant="headingSm" color="subdued">
+                    Active Template
+                  </Text>
+                  <Text as="p" variant="headingLg">
+                    {settings.selectedTemplate.charAt(0).toUpperCase() + settings.selectedTemplate.slice(1)}
+                  </Text>
+                </BlockStack>
+              </Card>
+            </InlineGrid>
 
-            <Card>
+            <Card padding="0">
               <BlockStack gap="400">
-                <Text variant="headingMd" as="h2">
-                  Template
-                </Text>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
-                  {templates.map((tpl) => (
-                    <div
-                      key={tpl.id}
-                      onClick={() => {
-                        if (tpl.requiresUpgrade) {
-                          window.location.href = "/app/billing";
-                        } else {
-                          handleChange(tpl.id, "selectedTemplate");
-                        }
-                      }}
-                      style={{
-                        cursor: "pointer",
-                        border: formState.selectedTemplate === tpl.id ? "2px solid #005bd3" : "1px solid #c9cccf",
-                        borderRadius: "8px",
-                        padding: "16px",
-                        backgroundColor: formState.selectedTemplate === tpl.id ? "#f4f6f8" : "#ffffff",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        gap: "8px",
-                      }}
-                    >
-                      <Text variant="headingSm" as="h3">
-                        {tpl.name}
-                      </Text>
-                      {tpl.requiresUpgrade && (
-                        <Badge tone="warning">Upgrade to Basic</Badge>
-                      )}
-                    </div>
-                  ))}
+                <div style={{ padding: "16px 16px 0 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <Text variant="headingMd" as="h2">
+                    Recent Subscribers
+                  </Text>
+                  <Button onClick={() => navigate("/app/subscribers")}>View all</Button>
                 </div>
+                {recentSubscribers.length === 0 ? (
+                  <div style={{ padding: "16px" }}>
+                    <EmptyState
+                      heading="No subscribers yet"
+                      image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+                    >
+                      <p>When customers sign up for back in stock notifications, they will appear here.</p>
+                    </EmptyState>
+                  </div>
+                ) : (
+                  <DataTable
+                    columnContentTypes={["text", "text", "text"]}
+                    headings={["Email", "Product", "Date"]}
+                    rows={subscriberRows}
+                  />
+                )}
               </BlockStack>
             </Card>
-
-            <Button primary loading={isSaving} onClick={handleSave}>
-              Save Settings
-            </Button>
           </BlockStack>
         </Layout.Section>
       </Layout>
