@@ -24,3 +24,8 @@ handle = "backinstock-extension"
 
 [build]
 automatically_update_urls_on_dev = true
+
+[app_proxy]
+url = "https://backin-stock.vercel.app"
+subpath = "backinstock-notifier"
+prefix = "apps"
