@@ -19,36 +19,60 @@ export default function App() {
   return (
     <div className={styles.index}>
       <div className={styles.content}>
-        <h1 className={styles.heading}>A short heading about [your app]</h1>
-        <p className={styles.text}>
-          A tagline about [your app] that describes your value proposition.
-        </p>
+        
+        <div className={styles.header}>
+          <h1 className={styles.heading}>Never Miss a Sale Again</h1>
+          <p className={styles.text}>
+            Recapture lost revenue with automated, beautifully designed back-in-stock notifications that bring customers back when they're ready to buy.
+          </p>
+        </div>
+
         {showForm && (
-          <Form className={styles.form} method="post" action="/auth/login">
-            <label className={styles.label}>
-              <span>Shop domain</span>
-              <input className={styles.input} type="text" name="shop" />
-              <span>e.g: my-shop-domain.myshopify.com</span>
-            </label>
-            <button className={styles.button} type="submit">
-              Log in
-            </button>
-          </Form>
+          <div className={styles.formContainer}>
+            <Form className={styles.form} method="post" action="/auth/login">
+              <label className={styles.label}>
+                <span className={styles.labelText}>Enter your Shop domain to log in</span>
+                <input 
+                  className={styles.input} 
+                  type="text" 
+                  name="shop" 
+                  placeholder="e.g. my-shop-domain.myshopify.com"
+                  required
+                />
+              </label>
+              <button className={styles.button} type="submit">
+                Log in to Dashboard
+              </button>
+            </Form>
+          </div>
         )}
-        <ul className={styles.list}>
-          <li>
-            <strong>Product feature</strong>. Some detail about your feature and
-            its benefit to your customer.
-          </li>
-          <li>
-            <strong>Product feature</strong>. Some detail about your feature and
-            its benefit to your customer.
-          </li>
-          <li>
-            <strong>Product feature</strong>. Some detail about your feature and
-            its benefit to your customer.
-          </li>
-        </ul>
+
+        <div className={styles.features}>
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>🚀</div>
+            <h3 className={styles.featureTitle}>Instant Notifications</h3>
+            <p className={styles.featureDesc}>
+              Automatically alert subscribers the moment inventory is replenished, maximizing your conversion rates.
+            </p>
+          </div>
+          
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>🎨</div>
+            <h3 className={styles.featureTitle}>Premium Design</h3>
+            <p className={styles.featureDesc}>
+              Choose from beautiful, conversion-optimized templates that integrate seamlessly into your storefront.
+            </p>
+          </div>
+          
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>📈</div>
+            <h3 className={styles.featureTitle}>Analytics & Insights</h3>
+            <p className={styles.featureDesc}>
+              Track your most demanded products and make data-driven inventory decisions.
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
   );
