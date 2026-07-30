@@ -23,34 +23,36 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
       }
 
-      var formHtml = "<form id='backinstock-form' style='";
+      var containerStyle = "padding:24px;display:flex;flex-direction:column;gap:12px;font-family:sans-serif;";
+      var inputStyle = "padding:10px;width:100%;box-sizing:border-box;";
+      var btnStyle = "padding:12px 16px;cursor:pointer;width:100%;";
+      var titleStyle = "margin:0 0 8px 0;font-size:18px;font-weight:600;color:inherit;";
+
       var tpl = settings.selectedTemplate || "minimal";
 
       if (tpl === "minimal") {
-        formHtml += "background:#FFFFFF;border:1px solid #E0E0E0;color:#000000;border-radius:4px;font-family:sans-serif;padding:15px;";
+        containerStyle += "border:1px solid #e1e3e5;border-radius:4px;background-color:#fff;color:#000;";
+        inputStyle += "border:1px solid #c9cccf;border-radius:4px;";
+        btnStyle += "border:none;background-color:#202223;color:#fff;border-radius:4px;";
       } else if (tpl === "bold") {
-        formHtml += "background:#1A1A1A;border:none;color:#FFFFFF;border-radius:4px;font-family:sans-serif;padding:15px;";
+        containerStyle += "border:4px solid #000;background-color:#fff;color:#000;";
+        inputStyle += "border:2px solid #000;font-weight:bold;font-size:16px;";
+        btnStyle += "border:2px solid #000;background-color:#000;color:#fff;font-weight:bold;text-transform:uppercase;font-size:16px;";
+        titleStyle += "text-transform:uppercase;font-weight:900;";
       } else if (tpl === "elegant") {
-        formHtml += "background:#FDF6F0;border:1px solid #E8D5C4;color:#5C4033;border-radius:20px;font-family:Georgia,serif;padding:15px;";
+        containerStyle += "border-radius:12px;background-color:#fdfbf7;box-shadow:0 10px 30px rgba(0,0,0,0.08);color:#4a3f39;";
+        inputStyle += "border:1px solid #e0dcd3;border-radius:24px;background-color:#fff;padding:12px 16px;";
+        btnStyle += "border:none;background-color:#6b5b52;color:#fff;border-radius:24px;font-size:16px;";
+        titleStyle += "font-family:serif;font-style:italic;color:#4a3f39;font-size:20px;text-align:center;";
       } else if (tpl === "dark") {
-        formHtml += "background:#0D0D0D;border:1px solid #00FF88;color:#FFFFFF;border-radius:6px;font-family:monospace;padding:15px;";
+        containerStyle += "border:1px solid #444;border-radius:8px;background-color:#111213;color:#fff;";
+        inputStyle += "border:1px solid #555;border-radius:4px;background-color:#202123;color:#fff;";
+        btnStyle += "border:none;background-color:#fff;color:#111213;border-radius:4px;font-weight:bold;";
       }
 
-      formHtml += "'>";
-      formHtml += "<h3 style='margin-top:0; color:inherit;'>" + settings.formTitle + "</h3>";
-      formHtml += "<input type='email' id='backinstock-email' placeholder='Enter your email' required style='width:100%;padding:10px;margin-bottom:10px;box-sizing:border-box;'/>";
-
-      var btnStyle = "padding:10px 15px;border:none;cursor:pointer;width:100%;";
-      if (tpl === "minimal") {
-        btnStyle += "background:#000000;color:#FFFFFF;border-radius:4px;";
-      } else if (tpl === "bold") {
-        btnStyle += "background:#FF4444;color:#FFFFFF;border-radius:4px;";
-      } else if (tpl === "elegant") {
-        btnStyle += "background:#C49A6C;color:#FFFFFF;border-radius:20px;";
-      } else if (tpl === "dark") {
-        btnStyle += "background:#00FF88;color:#000000;border-radius:6px;";
-      }
-
+      var formHtml = "<form id='backinstock-form' style='" + containerStyle + "'>";
+      formHtml += "<h3 style='" + titleStyle + "'>" + settings.formTitle + "</h3>";
+      formHtml += "<input type='email' id='backinstock-email' placeholder='Enter your email' required style='" + inputStyle + "'/>";
       formHtml += "<button type='submit' style='" + btnStyle + "'>" + settings.buttonText + "</button>";
       formHtml += "</form>";
       formHtml += "<div id='backinstock-msg' style='margin-top:10px;display:none;'></div>";
