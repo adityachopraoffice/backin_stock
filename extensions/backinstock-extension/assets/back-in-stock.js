@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       formHtml += "'>";
-      formHtml += "<h3 style='margin-top:0;'>" + settings.formTitle + "</h3>";
+      formHtml += "<h3 style='margin-top:0; color:inherit;'>" + settings.formTitle + "</h3>";
       formHtml += "<input type='email' id='backinstock-email' placeholder='Enter your email' required style='width:100%;padding:10px;margin-bottom:10px;box-sizing:border-box;'/>";
 
       var btnStyle = "padding:10px 15px;border:none;cursor:pointer;width:100%;";
