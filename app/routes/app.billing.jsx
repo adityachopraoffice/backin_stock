@@ -9,6 +9,7 @@ import {
   Badge,
   BlockStack,
   InlineGrid,
+  InlineStack,
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import prisma from "../db.server";
@@ -137,9 +138,12 @@ export default function Billing() {
                 </BlockStack>
               </Card>
 
-              <Card>
+              <div className="pro-plan-card" style={{ padding: "16px" }}>
                 <BlockStack gap="400">
-                  <Text variant="headingMd" as="h2">Pro — $9.99/mo</Text>
+                  <InlineStack align="space-between">
+                    <Text variant="headingMd" as="h2">Pro — $9.99/mo</Text>
+                    <Badge tone="success">Recommended</Badge>
+                  </InlineStack>
                   <ul>
                     <li>Unlimited subscribers</li>
                     <li>All 4 templates</li>
@@ -153,7 +157,7 @@ export default function Billing() {
                     {currentPlan === "pro" ? "Current Plan" : "Upgrade to Pro"}
                   </Button>
                 </BlockStack>
-              </Card>
+              </div>
             </InlineGrid>
           </BlockStack>
         </Layout.Section>

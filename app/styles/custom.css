@@ -1,0 +1,85 @@
+/* Premium UI Redesign Styles */
+
+/* Subtle background for the whole iframe body */
+body {
+  background-color: #f6f6f7;
+  background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,0.03) 0, transparent 50%), 
+                    radial-gradient(at 50% 0%, hsla(225,39%,30%,0.03) 0, transparent 50%), 
+                    radial-gradient(at 100% 0%, hsla(339,49%,30%,0.03) 0, transparent 50%);
+}
+
+/* Stat Cards with accent left border */
+.premium-card-accent-blue {
+  border-left: 4px solid #005bd3 !important;
+}
+
+.premium-card-accent-green {
+  border-left: 4px solid #008060 !important;
+}
+
+.premium-card-accent-purple {
+  border-left: 4px solid #6b1cb0 !important;
+}
+
+/* Icon containers for stat cards */
+.stat-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.stat-icon-blue {
+  background-color: #e0f2fe;
+  color: #005bd3;
+}
+
+.stat-icon-green {
+  background-color: #e1f4e5;
+  color: #008060;
+}
+
+.stat-icon-purple {
+  background-color: #f4e6ff;
+  color: #6b1cb0;
+}
+
+/* Billing page Pro plan highlight */
+.pro-plan-card {
+  position: relative;
+  background: linear-gradient(180deg, #fefefe 0%, #f4f6f8 100%);
+  border: 1px solid #c9cccf;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pro-plan-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  height: 4px;
+  background: linear-gradient(90deg, #008060, #005bd3);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.pro-plan-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* Template grid hover effects */
+.template-card {
+  transition: all 0.2s ease;
+}
+
+.template-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+}

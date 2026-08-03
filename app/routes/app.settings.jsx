@@ -16,6 +16,7 @@ import {
   InlineGrid,
   Text,
   Badge,
+  Banner,
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import prisma from "../db.server";
@@ -163,6 +164,9 @@ export default function Settings() {
       <Layout>
         <Layout.Section>
           <BlockStack gap="500">
+            <Banner tone="info" title="Customize your notifications">
+              Configure how the back-in-stock widget appears on your store to match your brand's aesthetic.
+            </Banner>
             <Card>
               <BlockStack gap="400">
                 <Text variant="headingMd" as="h2">
@@ -198,6 +202,7 @@ export default function Settings() {
                   {templates.map((tpl) => (
                     <div
                       key={tpl.id}
+                      className="template-card"
                       onClick={() => {
                         if (tpl.requiresUpgrade) {
                           navigate("/app/billing");

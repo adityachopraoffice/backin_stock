@@ -56,6 +56,9 @@ export default function Dashboard() {
             <InlineGrid columns={{ xs: 1, md: 3 }} gap="400">
               <Card>
                 <BlockStack gap="200">
+                  <div className="stat-icon-container stat-icon-blue">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  </div>
                   <Text as="h3" variant="headingSm" color="subdued">
                     Total Subscribers
                   </Text>
@@ -66,6 +69,9 @@ export default function Dashboard() {
               </Card>
               <Card>
                 <BlockStack gap="200">
+                  <div className="stat-icon-container stat-icon-green">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                  </div>
                   <Text as="h3" variant="headingSm" color="subdued">
                     Current Plan
                   </Text>
@@ -76,6 +82,9 @@ export default function Dashboard() {
               </Card>
               <Card>
                 <BlockStack gap="200">
+                  <div className="stat-icon-container stat-icon-purple">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                  </div>
                   <Text as="h3" variant="headingSm" color="subdued">
                     Active Template
                   </Text>
