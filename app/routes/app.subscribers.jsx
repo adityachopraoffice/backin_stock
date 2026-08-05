@@ -1,4 +1,5 @@
 import { json } from "@remix-run/node";
+import { useEffect, useState } from "react";
 import {
   useLoaderData,
   useFetcher,
@@ -87,34 +88,43 @@ export default function Subscribers() {
     fetcher.submit({ id }, { method: "post" });
   };
 
-  const handleExportCSV = async () => {
-    const response = await fetch("?fetch_all=true");
-    const data = await response.json();
-    const subs = data.subscribers;
+  const exportFetcher = useFetcher();
+  const [isExporting, setIsExporting] = useState(false);
 
-    if (!subs || subs.length === 0) return;
-
-    const headers = ["Email", "Product", "Date"];
-    const rows = subs.map((sub) => [
-      sub.email,
-      sub.productTitle,
-      new Date(sub.createdAt).toLocaleDateString(),
-    ]);
-
-    const csvContent = [
-      headers.join(","),
-      ...rows.map((r) => r.map((c) => `"${c}"`).join(",")),
-    ].join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "subscribers.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleExportCSV = () => {
+    setIsExporting(true);
+    exportFetcher.load("?fetch_all=true");
   };
+
+  useEffect(() => {
+    if (isExporting && exportFetcher.state === "idle" && exportFetcher.data?.subscribers) {
+      setIsExporting(false);
+
+      const subs = exportFetcher.data.subscribers;
+      if (!subs || subs.length === 0) return;
+
+      const headers = ["Email", "Product", "Date"];
+      const rows = subs.map((sub) => [
+        sub.email,
+        sub.productTitle,
+        new Date(sub.createdAt).toLocaleDateString(),
+      ]);
+
+      const csvContent = [
+        headers.join(","),
+        ...rows.map((r) => r.map((c) => `"${c}"`).join(",")),
+      ].join("\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "subscribers.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }, [exportFetcher.data, exportFetcher.state, isExporting]);
 
   const hasPrevious = page > 1;
   const hasNext = page * 10 < totalCount;
@@ -137,7 +147,7 @@ export default function Subscribers() {
                 {totalCount} / {capLabel} subscribers
               </Badge>
               {currentPlan === "pro" && (
-                <Button onClick={handleExportCSV}>Export CSV</Button>
+                <Button loading={isExporting} onClick={handleExportCSV}>Export CSV</Button>
               )}
             </InlineStack>
 
