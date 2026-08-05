@@ -18,17 +18,15 @@ import { TitleBar } from "@shopify/app-bridge-react";
 export async function loader({ request }) {
   const { session } = await authenticate.admin(request);
 
-  const [totalSubscribers, recentSubscribers, settings] = await Promise.all([
-    prisma.subscriber.count({ where: { shop: session.shop } }),
-    prisma.subscriber.findMany({
-      where: { shop: session.shop },
-      orderBy: { createdAt: "desc" },
-      take: 5,
-    }),
-    prisma.shopSettings.findUnique({
-      where: { shop: session.shop },
-    }),
-  ]);
+  const totalSubscribers = await prisma.subscriber.count({ where: { shop: session.shop } });
+  const recentSubscribers = await prisma.subscriber.findMany({
+    where: { shop: session.shop },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  });
+  const settings = await prisma.shopSettings.findUnique({
+    where: { shop: session.shop },
+  });
 
   return json({
     totalSubscribers,

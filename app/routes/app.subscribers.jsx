@@ -36,20 +36,18 @@ export async function loader({ request }) {
   const limit = 10;
   const skip = (page - 1) * limit;
 
-  const [subscribers, totalCount, settings] = await Promise.all([
-    prisma.subscriber.findMany({
-      where: { shop: session.shop },
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-    }),
-    prisma.subscriber.count({
-      where: { shop: session.shop },
-    }),
-    prisma.shopSettings.findUnique({
-      where: { shop: session.shop },
-    }),
-  ]);
+  const subscribers = await prisma.subscriber.findMany({
+    where: { shop: session.shop },
+    orderBy: { createdAt: "desc" },
+    skip,
+    take: limit,
+  });
+  const totalCount = await prisma.subscriber.count({
+    where: { shop: session.shop },
+  });
+  const settings = await prisma.shopSettings.findUnique({
+    where: { shop: session.shop },
+  });
 
   const currentPlan = settings?.currentPlan || "free";
   let cap = 50;
