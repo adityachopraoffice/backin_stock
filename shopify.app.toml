@@ -19,6 +19,15 @@ redirect_urls = [
 [webhooks]
 api_version = "2026-10"
 
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks"
+
+[webhooks.privacy_compliance]
+customer_deletion_url = "https://backin-stock.vercel.app/webhooks"
+customer_data_request_url = "https://backin-stock.vercel.app/webhooks"
+shop_deletion_url = "https://backin-stock.vercel.app/webhooks"
+
 [extensions.theme]
 handle = "backinstock-extension"
 
