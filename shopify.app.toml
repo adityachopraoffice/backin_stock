@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-name = "Backin Stock"
+name = "Nexus Backin Stock"
 embedded = true
 client_id = "47cb9e9519a25773a829b4d49a7df9c0"
 application_url = "https://backin-stock.vercel.app"
