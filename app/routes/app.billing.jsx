@@ -40,9 +40,14 @@ export async function loader({ request }) {
       data: { shop: session.shop, currentPlan: activePlan },
     });
   } else if (settings.currentPlan !== activePlan) {
+    const updateData = { currentPlan: activePlan };
+    if (activePlan === "free") {
+      updateData.selectedTemplate = "minimal";
+    }
+
     settings = await prisma.shopSettings.update({
       where: { shop: session.shop },
-      data: { currentPlan: activePlan },
+      data: updateData,
     });
   }
 
